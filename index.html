@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"> <!-- defini o idioma do site -->
+
+<head>
+    <meta charset="UTF-8"> <!-- Identificação de caracter usando no site -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Identifica o navegador usado -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script> <!-- inclui a biblioteca phaser -->
+    <title>Passarinho</title> <!-- titulo da aba -->
+    <style> 
+        /* código para centralizar a tela */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        
+        var config = {
+            type: Phaser.Auto, //Defini a renderização com base no navegador
+            width: 800, // defini a largura da tela do game
+            height: 600, // defini a altura da tela do game
+
+            // defini as funções que serão executadas durante o game
+            scene: {
+                preload: preload,
+                create: create,
+                update: update,
+            }
+        };
+
+        var game = new Phaser.Game(config); //???
+
+        var passarinho;  // defini a variável do passaro
+
+        function preload() {
+            this.load.image('fundo', 'assets/bg_space.png'); // add o arquivo do fundo
+            this.load.spritesheet('bird', 'assets/bird-red.png', { frameWidth: 75, frameHeight: 75 }) // add o arquivo do passaro e defini o tamanho de cada frame
+        }
+
+        function create() {
+            this.add.image(400, 300, 'fundo').setScale(1.2); // add o fundo na tela
+            passarinho = this.add.sprite(100, 500, 'bird').setScale(1.3) // addd o passaro na tela
+ 
+            // cria a animação do voo do passaro
+            this.anims.create({
+                key: 'voar',
+                frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 7 }), // defini quais frames serão usado
+                frameRate: 10, // defini a quantidade de frames por segundo
+                repeat: -1 // coloca para ele ficar em looping
+            })
+
+            passarinho.anims.play('voar', true) // inicia a animação do voo
+        }
+
+        function update() {
+            // código para ver se o passarinho ta no começo da tela
+            if (passarinho.x === 100) {
+                passarinho.ida = true; // coloca o sentido do voo do passaro para a direita
+                passarinho.sobe = true // coloca o passarinho para subir
+                passarinho.setFlip(false, false); 
+            }
+            // código para movimentar o passaro para a direita e subir
+            if (passarinho.x < 700 && passarinho.ida === true) {
+                console.log('passarinho voa pra direita');
+                passarinho.x += 4;
+                passarinho.y -= 3;
+            }
+            // código para ver se o passarinho ta no final da tela
+            if (passarinho.x === 700) {
+                passarinho.ida = false; // coloca o sentido do voo do passaro para a esquerda
+                passarinho.sobe = false // coloca o passarinho para descer
+                passarinho.setFlip(true, false);
+            }
+            // código para movimentar o passaro para a esquerda e descer
+            if (passarinho.x > 100 && passarinho.ida === false) {
+                console.log('passarinho voa pra esquerda');
+                passarinho.x -= 4;
+                passarinho.y += 3;
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
